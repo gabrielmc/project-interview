@@ -1,48 +1,48 @@
 <?php
-
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
+        'cpf',
+        'profile_id',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Um usuário pertence a um perfil
+     * Relacionamento: belongsTo (N:1)
      */
-    protected function casts(): array
+    public function profile()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Profile::class);
+    }
+
+    /**
+     * Um usuário pode ter múltiplos endereços
+     * Um endereço pode pertencer a múltiplos usuários
+     * Relacionamento: belongsToMany (N:N)
+     */
+    public function addresses()
+    {
+        return $this->belongsToMany(Address::class, 'address_user')->withTimestamps();
     }
 }
