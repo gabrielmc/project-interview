@@ -187,4 +187,4 @@ Gostaríamos de agradecer aos seguintes patrocinadores por financiar o desenvolv
 
 ## 📧 Contato
 
-Para questões sobre este projeto específico, entre em contato através de (mailto:munhosga@gmail.com)
+Para questões sobre este projeto específico, entre em contato através do email : munhosga@gmail.com
