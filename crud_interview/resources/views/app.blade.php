@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title>Sistema CRUD - Gerenciamento de Usuários e Perfis</title>
+    <title>Sistema CRUD - Gerenciamento</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -19,12 +19,7 @@
         <header class="app-header">
             <div class="container">
                 <div class="header-content">
-                    <h1>🔷 Sistema de Gerenciamento de Usuários</h1>
-                    <nav class="header-nav">
-                        <a href="/" class="nav-link active">Usuários</a>
-                        <a href="/perfis" class="nav-link">Perfis</a>
-                        <a href="/enderecos" class="nav-link">Endereços</a>
-                    </nav>
+                    <h1>🔷 Sistema de Gerenciamento</h1>
                 </div>
             </div>
         </header>
@@ -32,8 +27,8 @@
         <!-- Main Content -->
         <main class="app-main">
             <div class="container">
-                <!-- Componente Vue Principal -->
-                <user-list></user-list>
+                <!-- Componente Principal com Navegação -->
+                <main-app></main-app>
             </div>
         </main>
 
@@ -53,33 +48,55 @@
 </html>
 
 <style>
-/* Estilos adicionais para o header */
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.app-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.header-nav {
-    display: flex;
-    gap: 20px;
+.app-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
 }
 
-.nav-link {
-    color: white;
-    text-decoration: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+/* Main */
+.app-main {
+    min-height: calc(100vh - 200px);
 }
 
-.nav-link:hover,
-.nav-link.active {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
+/* Footer */
 .app-footer {
-    background-color: #333;
+    background-color: #2c3e50;
     color: white;
     padding: 20px 0;
     text-align: center;
@@ -91,13 +108,14 @@
     font-size: 14px;
 }
 
+/* Loading Global */
 #global-loading {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,11 +123,11 @@
 }
 
 .loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #007bff;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #667eea;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     animation: spin 1s linear infinite;
 }
 
@@ -118,15 +136,20 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
     .header-content {
         flex-direction: column;
         gap: 15px;
+        text-align: center;
     }
 
-    .header-nav {
-        width: 100%;
-        justify-content: center;
+    .app-header h1 {
+        font-size: 20px;
+    }
+
+    .container {
+        padding: 0 10px;
     }
 }
 </style>
