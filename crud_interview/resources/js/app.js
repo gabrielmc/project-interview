@@ -13,10 +13,14 @@ import { createApp } from 'vue';
  * to use in your application's views. An example is included for you.
  */
 
-const app = createApp({});
+const app = createApp({
+  components: {
+    UserList
+  }
+});
 
-import ExampleComponent from './components/ExampleComponent.vue';
-app.component('example-component', ExampleComponent);
+//import ExampleComponent from './components/ExampleComponent.vue'; // [Disclaimer] FILE REMOVIDO NA CONFIGURAÇÂO DO FRONT 
+//app.component('example-component', ExampleComponent);
 
 /**
  * The following block of code may be used to automatically register your
@@ -36,4 +40,35 @@ app.component('example-component', ExampleComponent);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
+// Diretiva para máscaras de input
+app.directive('mask', {
+  mounted(el, binding) {
+    const mask = binding.value;
+    
+    el.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      let maskedValue = '';
+      let valueIndex = 0;
+      
+      for (let i = 0; i < mask.length && valueIndex < value.length; i++) {
+        if (mask[i] === '#') {
+          maskedValue += value[valueIndex];
+          valueIndex++;
+        } else {
+          maskedValue += mask[i];
+        }
+      }
+      
+      e.target.value = maskedValue;
+      
+      // Disparar evento input para o v-model
+      e.target.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+});
+
+// Montar aplicação
 app.mount('#app');
+
+// Exportar para uso global
+export default app;
