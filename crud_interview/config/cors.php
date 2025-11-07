@@ -9,7 +9,7 @@ return [
     | Normalmente, as rotas da API ficam em "api/*".
     |
     */
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     /*
     |--------------------------------------------------------------------------

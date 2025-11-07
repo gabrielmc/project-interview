@@ -69,7 +69,7 @@ api.interceptors.response.use(
   }
 );
 
-// Métodos auxiliares específicos para o CRUD
+// Métodos auxiliares específicos - CRUD
 export const userService = {
   // Listar todos os usuários
   list: (page = 1, perPage = 15) => {
