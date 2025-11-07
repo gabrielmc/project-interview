@@ -76,7 +76,7 @@
             <th>CPF</th>
             <th>E-mail</th>
             <th>Perfil</th>
-            <th>Ação</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

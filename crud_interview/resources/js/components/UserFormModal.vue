@@ -112,7 +112,7 @@
                   <tr>
                     <th>Logradouro</th>
                     <th>CEP</th>
-                    <th>Ação</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
