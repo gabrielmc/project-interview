@@ -27,7 +27,7 @@ return [
     | Exemplo seguro: ['http://localhost:5173'] para o Vite/Vue.
     |
     */
-    'allowed_origins' => [env('FRONTEND_URL', '*')],
+    'allowed_origins' => ['http://localhost:5173', 'http://127.0.0.1:5173'],
 
     /*
     |--------------------------------------------------------------------------
