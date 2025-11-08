@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Listar todos os usuários
-     * GET /api/v1/usuarios
-     */
     public function index()
     {
         $usuarios = User::with(['profile', 'addresses'])->paginate(15);
@@ -22,10 +18,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Pesquisar usuários com filtros
-     * GET /api/v1/usuarios/pesquisar?nome=&cpf=&data_inicio=&data_fim=
-     */
     public function search(Request $request)
     {
         $query = User::with(['profile', 'addresses']);
@@ -51,10 +43,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Criar novo usuário
-     * POST /api/v1/usuarios
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -106,10 +94,6 @@ class UserController extends Controller
         ], 201);
     }
 
-    /**
-     * Detalhar usuário específico
-     * GET /api/v1/usuarios/{id}
-     */
     public function show($id)
     {
         $usuario = User::with(['profile', 'addresses'])->find($id);
@@ -125,10 +109,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Atualizar usuário
-     * PUT/PATCH /api/v1/usuarios/{id}
-     */
     public function update(Request $request, $id)
     {
         $usuario = User::find($id);
@@ -167,10 +147,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Excluir usuário
-     * DELETE /api/v1/usuarios/{id}
-     */
     public function destroy($id)
     {
         $usuario = User::find($id);
@@ -189,10 +165,6 @@ class UserController extends Controller
         ], 200);
     }
 
-    /**
-     * Listar endereços de um usuário
-     * GET /api/v1/usuarios/{id}/enderecos
-     */
     public function getAddresses($id)
     {
         $usuario = User::with('addresses')->find($id);

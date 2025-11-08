@@ -6,11 +6,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\AddressController;
 
-// Rota de teste rápida
 Route::get('/ping', fn() => response()->json(['status' => 'ok']));
-
-// Rota para obter usuário autenticado
-Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user());
+Route::middleware('auth:sanctum')->get('/user', fn (Request $request) => $request->user()); // Rota para obter usuário autenticado
 
 // Grupo de rotas da API (sem autenticação)
 Route::prefix('v1')->group(function () {
@@ -20,8 +17,7 @@ Route::prefix('v1')->group(function () {
     // ============================================
     
     Route::get('/usuarios/pesquisar', [UserController::class, 'search'])->name('api.usuarios.search');
-    
-    // Recursos completos de CRUD de usuários
+    Route::get('/usuarios/{id}/enderecos', [UserController::class, 'getAddresses'])->name('api.usuarios.enderecos');
     Route::apiResource('usuarios', UserController::class)->names([
         'index' => 'api.usuarios.index',      // GET /api/v1/usuarios - Listar todos
         'store' => 'api.usuarios.store',      // POST /api/v1/usuarios - Criar
@@ -30,13 +26,11 @@ Route::prefix('v1')->group(function () {
         'destroy' => 'api.usuarios.destroy',  // DELETE /api/v1/usuarios/{id} - Excluir
     ]);
     
-    // Rotas adicionais para usuários
-    Route::get('/usuarios/{id}/enderecos', [UserController::class, 'getAddresses'])->name('api.usuarios.enderecos');
-    
-    
     // ============================================
     // ROTAS DE PERFIS
     // ============================================
+
+    Route::get('/perfis/{id}/usuarios', [ProfileController::class, 'getUsers'])->name('api.perfis.usuarios');
     Route::apiResource('perfis', ProfileController::class)->names([
         'index' => 'api.perfis.index',
         'store' => 'api.perfis.store',
@@ -45,13 +39,13 @@ Route::prefix('v1')->group(function () {
         'destroy' => 'api.perfis.destroy',
     ]);
     
-    // Listar usuários de um perfil específico
-    Route::get('/perfis/{id}/usuarios', [ProfileController::class, 'getUsers'])->name('api.perfis.usuarios');
-    
-    
     // ============================================
     // ROTAS DE ENDEREÇOS
     // ============================================
+
+    Route::get('/enderecos/{id}/usuarios', [AddressController::class, 'getUsers'])->name('api.enderecos.usuarios');
+    Route::post('/enderecos/{id}/vincular-usuario', [AddressController::class, 'attachUser'])->name('api.enderecos.vincular'); 
+    Route::delete('/enderecos/{id}/desvincular-usuario/{userId}', [AddressController::class, 'detachUser'])->name('api.enderecos.desvincular');
     Route::apiResource('enderecos', AddressController::class)->names([
         'index' => 'api.enderecos.index',
         'store' => 'api.enderecos.store',
@@ -59,16 +53,6 @@ Route::prefix('v1')->group(function () {
         'update' => 'api.enderecos.update',
         'destroy' => 'api.enderecos.destroy',
     ]);
-    
-    // Vincular endereço a usuário
-    Route::post('/enderecos/{id}/vincular-usuario', [AddressController::class, 'attachUser'])->name('api.enderecos.vincular');
-    
-    // Desvincular endereço de usuário
-    Route::delete('/enderecos/{id}/desvincular-usuario/{userId}', [AddressController::class, 'detachUser'])->name('api.enderecos.desvincular');
-    
-    // Listar usuários de um endereço
-    Route::get('/enderecos/{id}/usuarios', [AddressController::class, 'getUsers'])->name('api.enderecos.usuarios');
-    
     
     // ============================================
     // ROTA DE BUSCA DE CEP (Opcional - Via API externa)
