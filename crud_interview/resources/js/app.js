@@ -39,9 +39,7 @@ app.directive('mask', {
           maskedValue += mask[i];
         }
       }
-      
       e.target.value = maskedValue;
-      
       // Disparar evento input para o v-model
       e.target.dispatchEvent(new Event('input', { bubbles: true }));
     });

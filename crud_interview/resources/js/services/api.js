@@ -73,21 +73,25 @@ api.interceptors.response.use(
 export const userService = {
   // Listar todos os usuários
   list: (page = 1, perPage = 15) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get('/usuarios', { params: { page, per_page: perPage } });
   },
 
   // Pesquisar usuários com filtros
   search: (filters) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get('/usuarios/pesquisar', { params: filters });
   },
 
   // Buscar usuário por ID
   getById: (id) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get(`/usuarios/${id}`);
   },
 
   // Criar novo usuário
   create: (data) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.post('/usuarios', data);
   },
 
@@ -110,11 +114,13 @@ export const userService = {
 export const profileService = {
   // Listar todos os perfis
   list: () => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get('/perfis');
   },
 
   // Buscar perfil por ID
   getById: (id) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get(`/perfis/${id}`);
   },
 
@@ -137,11 +143,13 @@ export const profileService = {
 export const addressService = {
   // Listar todos os endereços
   list: (page = 1, perPage = 15) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get('/enderecos', { params: { page, per_page: perPage } });
   },
 
   // Buscar endereço por ID
   getById: (id) => {
+    console.log('Chamando:', api.defaults.baseURL);
     return api.get(`/enderecos/${id}`);
   },
 

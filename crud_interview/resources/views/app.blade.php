@@ -19,7 +19,7 @@
         <header class="app-header">
             <div class="container">
                 <div class="header-content">
-                    <h1>🔷 Sistema de Gerenciamento</h1>
+                    <h1>Sistema de Gerenciamento</h1>
                 </div>
             </div>
         </header>
@@ -70,7 +70,7 @@ body {
 
 /* Header */
 .app-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #000000 0%, #001f3f 100%);
     color: white;
     padding: 20px 0;
     margin-bottom: 20px;
