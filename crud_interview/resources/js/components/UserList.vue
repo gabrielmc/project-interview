@@ -154,7 +154,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import UserFormModal from './UserFormModal.vue';
 import UserDetailsModal from './UserDetailsModal.vue';
-import api from '../services/api';
+import { userService } from '../services/api';
 
 export default {
   name: 'UserList',
@@ -188,9 +188,7 @@ export default {
     const loadUsers = async (page = 1) => {
       loading.value = true;
       try {
-        const response = await api.get('/usuarios', {
-          params: { page, per_page: pagination.per_page }
-        });
+        const response = await userService.list(page, pagination.per_page);
         
         if (response.data.success) {
           users.value = response.data.data.data;
@@ -202,7 +200,7 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao carregar usuários:', error);
-        alert('Erro ao carregar usuários');
+        alert('Erro ao carregar usuários: ' + (error.response?.data?.message || error.message));
       } finally {
         loading.value = false;
       }
@@ -222,7 +220,8 @@ export default {
         if (filters.data_inicio) params.data_inicio = filters.data_inicio;
         if (filters.data_fim) params.data_fim = filters.data_fim;
 
-        const response = await api.get('/usuarios/pesquisar', { params });
+        const response = await userService.search(params);
+        console.log('Response pesquisa:', response.data);
         
         if (response.data.success) {
           users.value = response.data.data.data;
@@ -234,7 +233,7 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao pesquisar:', error);
-        alert('Erro ao pesquisar usuários');
+        alert('Erro ao pesquisar usuários: ' + (error.response?.data?.message || error.message));
       } finally {
         loading.value = false;
       }
@@ -276,7 +275,7 @@ export default {
       }
 
       try {
-        const response = await api.delete(`/usuarios/${user.id}`);
+        const response = await userService.delete(user.id);
         
         if (response.data.success) {
           alert('Usuário excluído com sucesso!');
@@ -284,7 +283,7 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao excluir usuário:', error);
-        alert('Erro ao excluir usuário');
+        alert('Erro ao excluir usuário: ' + (error.response?.data?.message || error.message));
       }
     };
 
@@ -429,6 +428,10 @@ export default {
   cursor: pointer;
 }
 
+.btn-filtrar:hover {
+  background-color: #218838;
+}
+
 .btn-limpar {
   padding: 8px 25px;
   background-color: #6c757d;
@@ -436,6 +439,10 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.btn-limpar:hover {
+  background-color: #545b62;
 }
 
 .loading {
@@ -495,14 +502,27 @@ export default {
   color: white;
 }
 
-.btn-editar {
-  background-color: #ffc107;
-  color: #333;
+.btn-detalhar:hover {
+  background-color: #138496;
+}
+
+.btn-edit {
+  background-color: #074c91; 
+  color: #fff; 
+}
+
+.btn-editar:hover {
+  background-color: #074c91;
+  color: #fff;
 }
 
 .btn-excluir {
   background-color: #dc3545;
   color: white;
+}
+
+.btn-excluir:hover {
+  background-color: #c82333;
 }
 
 .no-data {
@@ -534,8 +554,22 @@ export default {
   cursor: not-allowed;
 }
 
+.btn-page:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
 .page-info {
   color: #666;
   font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .filter-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
 }
 </style>

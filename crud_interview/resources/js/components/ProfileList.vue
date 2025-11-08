@@ -45,6 +45,7 @@
           <div class="form-group">
             <label>Nome *</label>
             <input v-model="form.name" type="text" required placeholder="Nome do perfil" />
+            <span v-if="errors.name" class="error">{{ Array.isArray(errors.name) ? errors.name[0] : errors.name }}</span>
           </div>
 
           <div class="form-group">
@@ -66,7 +67,7 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue';
-import api from '../services/api';
+import { profileService } from '../services/api';
 
 export default {
   name: 'ProfileList',
@@ -77,6 +78,7 @@ export default {
     const modalMode = ref('create');
     const saving = ref(false);
     const selectedProfile = ref(null);
+    const errors = ref({});
 
     const form = reactive({
       name: '',
@@ -86,13 +88,14 @@ export default {
     const loadProfiles = async () => {
       loading.value = true;
       try {
-        const response = await api.get('/perfis');
+        const response = await profileService.list();
+        console.log('Response perfis:', response.data);
         if (response.data.success) {
           profiles.value = response.data.data;
         }
       } catch (error) {
         console.error('Erro ao carregar perfis:', error);
-        alert('Erro ao carregar perfis');
+        alert('Erro ao carregar perfis: ' + (error.response?.data?.message || error.message));
       } finally {
         loading.value = false;
       }
@@ -101,6 +104,7 @@ export default {
     const openCreateModal = () => {
       form.name = '';
       form.description = '';
+      errors.value = {};
       modalMode.value = 'create';
       selectedProfile.value = null;
       showModal.value = true;
@@ -108,7 +112,8 @@ export default {
 
     const editProfile = (profile) => {
       form.name = profile.name;
-      form.description = profile.description;
+      form.description = profile.description || '';
+      errors.value = {};
       modalMode.value = 'edit';
       selectedProfile.value = profile;
       showModal.value = true;
@@ -116,12 +121,19 @@ export default {
 
     const saveProfile = async () => {
       saving.value = true;
+      errors.value = {};
+      
       try {
         let response;
+        const data = {
+          name: form.name,
+          description: form.description
+        };
+
         if (modalMode.value === 'create') {
-          response = await api.post('/perfis', form);
+          response = await profileService.create(data);
         } else {
-          response = await api.put(`/perfis/${selectedProfile.value.id}`, form);
+          response = await profileService.update(selectedProfile.value.id, data);
         }
 
         if (response.data.success) {
@@ -131,7 +143,12 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao salvar perfil:', error);
-        alert(error.response?.data?.message || 'Erro ao salvar perfil');
+        
+        if (error.response?.data?.errors) {
+          errors.value = error.response.data.errors;
+        } else {
+          alert(error.response?.data?.message || 'Erro ao salvar perfil');
+        }
       } finally {
         saving.value = false;
       }
@@ -143,7 +160,7 @@ export default {
       }
 
       try {
-        const response = await api.delete(`/perfis/${profile.id}`);
+        const response = await profileService.delete(profile.id);
         if (response.data.success) {
           alert('Perfil excluído com sucesso!');
           loadProfiles();
@@ -157,6 +174,7 @@ export default {
     const closeModal = () => {
       showModal.value = false;
       selectedProfile.value = null;
+      errors.value = {};
     };
 
     onMounted(() => {
@@ -170,6 +188,7 @@ export default {
       modalMode,
       saving,
       form,
+      errors,
       loadProfiles,
       openCreateModal,
       editProfile,
@@ -205,6 +224,10 @@ export default {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.btn-novo:hover {
+  background-color: #0056b3;
 }
 
 .loading {
@@ -279,9 +302,13 @@ export default {
   font-size: 14px;
 }
 
+.btn-action:hover {
+  opacity: 0.8;
+}
+
 .btn-edit {
-  background-color: #ffc107;
-  color: #333;
+  background-color: #003366; 
+  color: #fff; 
 }
 
 .btn-delete {
@@ -310,6 +337,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 20px;
 }
 
 .modal-container {
@@ -340,6 +368,10 @@ export default {
   color: #999;
 }
 
+.btn-close:hover {
+  color: #333;
+}
+
 .modal-form {
   padding: 20px;
 }
@@ -363,6 +395,13 @@ export default {
   font-size: 14px;
 }
 
+.error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
 .form-actions {
   display: flex;
   gap: 10px;
@@ -379,6 +418,10 @@ export default {
   cursor: pointer;
 }
 
+.btn-cancel:hover {
+  background-color: #545b62;
+}
+
 .btn-save {
   padding: 10px 20px;
   background-color: #28a745;
@@ -391,5 +434,9 @@ export default {
 .btn-save:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: #218838;
 }
 </style>

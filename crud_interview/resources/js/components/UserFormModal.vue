@@ -71,17 +71,6 @@
           <div v-for="(address, index) in form.addresses" :key="index" class="address-item">
             <div class="address-fields">
               <div class="form-row">
-                <div class="form-group">
-                  <label>Logradouro</label>
-                  <input 
-                    v-model="address.logradouro" 
-                    type="text"
-                    placeholder="Rua, Avenida..."
-                  />
-                </div>
-              </div>
-
-              <div class="form-row">
                 <div class="form-group" style="flex: 0 0 200px;">
                   <label>CEP</label>
                   <input 
@@ -92,7 +81,20 @@
                     @blur="searchCEP(index)"
                   />
                 </div>
+              </div>
 
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Logradouro</label>
+                  <input 
+                    v-model="address.logradouro" 
+                    type="text"
+                    placeholder="Rua, Avenida..."
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">  
                 <div class="form-group flex-1">
                   <button 
                     type="button" 
@@ -148,7 +150,7 @@
 
 <script>
 import { ref, reactive, onMounted, watch } from 'vue';
-import api from '../services/api';
+import { userService, profileService, addressService } from '../services/api';
 
 export default {
   name: 'UserFormModal',
@@ -191,7 +193,7 @@ export default {
     // Carregar perfis
     const loadProfiles = async () => {
       try {
-        const response = await api.get('/perfis');
+        const response = await profileService.list();
         if (response.data.success) {
           profiles.value = response.data.data;
         }
@@ -203,11 +205,9 @@ export default {
     // Buscar CEP
     const searchCEP = async (index) => {
       const cep = form.addresses[index].cep.replace(/\D/g, '');
-      
       if (cep.length !== 8) return;
-
       try {
-        const response = await api.get(`/cep/${cep}`);
+        const response = await addressService.searchCEP(cep);
         
         if (response.data.success) {
           const data = response.data.data;
@@ -228,14 +228,11 @@ export default {
     // Adicionar endereço à lista
     const addAddress = () => {
       const address = form.addresses[0];
-      
       if (!address.logradouro || !address.cep) {
         alert('Preencha o logradouro e CEP');
         return;
       }
-
       addedAddresses.value.push({ ...address });
-      
       // Limpar formulário de endereço
       form.addresses[0] = {
         logradouro: '',
@@ -272,11 +269,11 @@ export default {
         };
 
         let response;
-
         if (props.mode === 'edit') {
-          response = await api.put(`/usuarios/${props.user.id}`, data);
+          response = await userService.update(props.user.id, data);
         } else {
-          response = await api.post('/usuarios', data);
+          console.log(data);
+          response = await userService.create(data);
         }
 
         if (response.data.success) {

@@ -129,7 +129,7 @@
 
 <script>
 import { ref, reactive, onMounted } from 'vue';
-import api from '../services/api';
+import { addressService } from '../services/api';
 
 export default {
   name: 'AddressList',
@@ -161,7 +161,7 @@ export default {
     const loadAddresses = async (page = 1) => {
       loading.value = true;
       try {
-        const response = await api.get('/enderecos', {
+        const response = await addressService.list('/enderecos', {
           params: { page, per_page: pagination.per_page }
         });
         if (response.data.success) {
@@ -185,7 +185,7 @@ export default {
       if (cep.length !== 8) return;
 
       try {
-        const response = await api.get(`/cep/${cep}`);
+        const response = await addressService.searchCEP(`/cep/${cep}`);
         if (response.data.success) {
           const data = response.data.data;
           form.logradouro = data.logradouro;
@@ -238,9 +238,9 @@ export default {
 
         let response;
         if (modalMode.value === 'create') {
-          response = await api.post('/enderecos', data);
+          response = await addressService.create('/enderecos', data);
         } else {
-          response = await api.put(`/enderecos/${selectedAddress.value.id}`, data);
+          response = await addressService.update(`/enderecos/${selectedAddress.value.id}`, data);
         }
 
         if (response.data.success) {
@@ -262,7 +262,7 @@ export default {
       }
 
       try {
-        const response = await api.delete(`/enderecos/${address.id}`);
+        const response = await addressService.delete(`/enderecos/${address.id}`);
         if (response.data.success) {
           alert('Endereço excluído com sucesso!');
           loadAddresses(pagination.current_page);
@@ -404,8 +404,8 @@ export default {
 }
 
 .btn-edit {
-  background-color: #ffc107;
-  color: #333;
+  background-color: #003366; 
+  color: #fff; 
 }
 
 .btn-delete {
