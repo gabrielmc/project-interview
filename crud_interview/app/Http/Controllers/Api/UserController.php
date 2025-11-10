@@ -45,21 +45,48 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'cpf' => 'required|string|size:11|unique:users,cpf',
-            'profile_id' => 'required|exists:profiles,id',
-            'password' => 'required|string|min:8',
-            'addresses' => 'nullable|array',
-            'addresses.*.cep' => 'required|string|size:8',
-            'addresses.*.logradouro' => 'required|string|max:255',
-            'addresses.*.numero' => 'required|string|max:10',
-            'addresses.*.complemento' => 'nullable|string|max:255',
-            'addresses.*.bairro' => 'required|string|max:100',
-            'addresses.*.cidade' => 'required|string|max:100',
-            'addresses.*.estado' => 'required|string|size:2',
-        ]);
+        $validator = Validator::make(
+         $request->all(),
+            [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'cpf' => 'required|string|size:11|unique:users,cpf',
+                'profile_id' => 'required|exists:profiles,id',
+                'password' => 'required|string|min:8',
+                'addresses' => 'nullable|array',
+                'addresses.*.cep' => 'required|string|size:8',
+                'addresses.*.logradouro' => 'required|string|max:255',
+                'addresses.*.numero' => 'required|string|max:10',
+                'addresses.*.complemento' => 'nullable|string|max:255',
+                'addresses.*.bairro' => 'required|string|max:100',
+                'addresses.*.cidade' => 'required|string|max:100',
+                'addresses.*.estado' => 'required|string|size:2',
+            ],
+            [
+                // Mensagens personalizadas
+                'name.required' => 'O nome é obrigatório.',
+                'email.required' => 'O e-mail é obrigatório.',
+                'email.email' => 'Informe um e-mail válido.',
+                'email.unique' => 'Este e-mail já está sendo usado por outro usuário.',
+                'cpf.required' => 'O CPF é obrigatório.',
+                'cpf.size' => 'O CPF deve conter exatamente 11 dígitos.',
+                'cpf.unique' => 'Este CPF já está cadastrado no sistema.',
+                'profile_id.required' => 'Selecione um perfil válido.',
+                'profile_id.exists' => 'O perfil informado não existe.',
+                'password.required' => 'A senha é obrigatória.',
+                'password.min' => 'A senha deve ter pelo menos :min caracteres.',
+
+                // Endereços
+                'addresses.*.cep.required' => 'O campo CEP é obrigatório.',
+                'addresses.*.cep.size' => 'O CEP deve conter 8 dígitos.',
+                'addresses.*.logradouro.required' => 'O logradouro é obrigatório.',
+                'addresses.*.numero.required' => 'O número é obrigatório.',
+                'addresses.*.bairro.required' => 'O bairro é obrigatório.',
+                'addresses.*.cidade.required' => 'A cidade é obrigatória.',
+                'addresses.*.estado.required' => 'O estado é obrigatório.',
+                'addresses.*.estado.size' => 'O estado deve conter 2 caracteres (ex: BA, SP).',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([

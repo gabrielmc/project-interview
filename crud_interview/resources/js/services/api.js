@@ -72,24 +72,22 @@ api.interceptors.response.use(
 // Métodos auxiliares específicos - CRUD
 export const userService = {
   list: (page = 1, perPage = 15) => {
-    console.log('Chamando:', api.defaults.baseURL);
+    //console.log('Chamando:', api.defaults.baseURL);
     return api.get('/usuarios', { params: { page, per_page: perPage } });
   },
 
   search: (filters) => {
-    console.log('Chamando:', api.defaults.baseURL);
+    //console.log('Chamando:', api.defaults.baseURL);
     return api.get('/usuarios/pesquisar', { params: filters });
   },
 
   getById: (id) => {
-    console.log('Chamando:', api.defaults.baseURL);
+    //console.log('Chamando:', api.defaults.baseURL);
     return api.get(`/usuarios/${id}`);
   },
 
   // Criar novo usuário
   create: (data) => {
-    console.log('Chamando:', api.defaults.baseURL);
-    alert("Teste");
     return api.post('/usuarios', data);
   },
 

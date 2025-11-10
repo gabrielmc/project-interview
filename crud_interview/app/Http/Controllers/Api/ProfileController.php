@@ -20,10 +20,21 @@ class ProfileController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:profiles,name',
-            'description' => 'nullable|string',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string|max:255|unique:profiles,name',
+                'description' => 'nullable|string',
+            ],
+            [
+                //Mensagens personalizadas
+                'name.required' => 'O nome do perfil é obrigatório.',
+                'name.string' => 'O nome do perfil deve ser um texto válido.',
+                'name.max' => 'O nome do perfil não pode ter mais que :max caracteres.',
+                'name.unique' => 'Já existe um perfil com este nome.',
+                'description.string' => 'A descrição deve ser um texto válido.',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([

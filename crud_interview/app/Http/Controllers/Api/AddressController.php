@@ -22,15 +22,47 @@ class AddressController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'cep' => 'required|string|size:8',
-            'logradouro' => 'required|string|max:255',
-            'numero' => 'required|string|max:10',
-            'complemento' => 'nullable|string|max:255',
-            'bairro' => 'required|string|max:100',
-            'cidade' => 'required|string|max:100',
-            'estado' => 'required|string|size:2',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'cep' => 'required|string|size:8',
+                'logradouro' => 'required|string|max:255',
+                'numero' => 'required|string|max:10',
+                'complemento' => 'nullable|string|max:255',
+                'bairro' => 'required|string|max:100',
+                'cidade' => 'required|string|max:100',
+                'estado' => 'required|string|size:2',
+            ],
+            [
+                // Mensagens personalizadas
+                'cep.required' => 'O campo CEP é obrigatório.',
+                'cep.string' => 'O CEP deve ser um texto válido.',
+                'cep.size' => 'O CEP deve conter exatamente :size dígitos.',
+
+                'logradouro.required' => 'O logradouro é obrigatório.',
+                'logradouro.string' => 'O logradouro deve ser um texto válido.',
+                'logradouro.max' => 'O logradouro não pode ter mais que :max caracteres.',
+
+                'numero.required' => 'O número é obrigatório.',
+                'numero.string' => 'O número deve ser um texto válido.',
+                'numero.max' => 'O número não pode ter mais que :max caracteres.',
+
+                'complemento.string' => 'O complemento deve ser um texto válido.',
+                'complemento.max' => 'O complemento não pode ter mais que :max caracteres.',
+
+                'bairro.required' => 'O bairro é obrigatório.',
+                'bairro.string' => 'O bairro deve ser um texto válido.',
+                'bairro.max' => 'O bairro não pode ter mais que :max caracteres.',
+
+                'cidade.required' => 'A cidade é obrigatória.',
+                'cidade.string' => 'A cidade deve ser um texto válido.',
+                'cidade.max' => 'A cidade não pode ter mais que :max caracteres.',
+
+                'estado.required' => 'O estado é obrigatório.',
+                'estado.string' => 'O estado deve ser um texto válido.',
+                'estado.size' => 'O estado deve conter exatamente :size caracteres (ex: BA, SP).',
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([
