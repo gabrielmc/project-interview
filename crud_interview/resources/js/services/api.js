@@ -89,6 +89,7 @@ export const userService = {
   // Criar novo usuário
   create: (data) => {
     console.log('Chamando:', api.defaults.baseURL);
+    alert("Teste");
     return api.post('/usuarios', data);
   },
 

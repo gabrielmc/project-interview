@@ -261,6 +261,7 @@ export default {
           email: form.email,
           cpf: form.cpf.replace(/\D/g, ''),
           profile_id: form.profile_id,
+          password: '12345678', // incluido a nivel de teste
           addresses: addedAddresses.value.map(addr => ({
             ...addr,
             cep: addr.cep.replace(/\D/g, ''),
@@ -282,7 +283,9 @@ export default {
         }
       } catch (error) {
         console.error('Erro ao salvar:', error);
-        
+        if (error.response?.status === 422) { // Filtrar erro request
+          console.error("Erros de validação:", error.response.data.errors);
+        }
         if (error.response?.data?.errors) {
           errors.value = error.response.data.errors;
         } else {
