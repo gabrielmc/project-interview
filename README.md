@@ -104,11 +104,22 @@ php artisan key:generate
 # DB_USERNAME=usuario
 # DB_PASSWORD=senha
 
+# Comando com base no env.example
+CREATE DATABASE crud_interview
+WITH OWNER = postgres
+ENCODING = 'UTF8';
+
 # Executar as migrações
 php artisan migrate
 
-# (Opcional) Executar seeders para dados de teste
+# Executar seeders para dados de teste
 php artisan db:seed
+
+# Limpar cache e otimizar
+php artisan config:clear
+php artisan cache:clear
+php artisan route:clear
+php artisan optimize
 
 # Iniciar o servidor de desenvolvimento
 php artisan serve
