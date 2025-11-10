@@ -262,13 +262,16 @@ export default {
       }
 
       try {
-        const response = await addressService.delete(`/enderecos/${address.id}`);
+        const response = await addressService.delete(address.id);
         if (response.data.success) {
           alert('Endereço excluído com sucesso!');
           loadAddresses(pagination.current_page);
         }
       } catch (error) {
         console.error('Erro ao excluir endereço:', error);
+        if (error.response?.status === 405) { // Filtrar erro request
+          console.error("Erro ---> :", error.response.data.errors);
+        }
         alert('Erro ao excluir endereço');
       }
     };

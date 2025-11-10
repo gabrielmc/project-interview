@@ -18,8 +18,7 @@ api.interceptors.request.use(
     // if (token) {
     //   config.headers.Authorization = `Bearer ${token}`;
     // }
-    
-    console.log('Requisição enviada:', config.method.toUpperCase(), config.url);
+    //console.log('Requisição enviada:', config.method.toUpperCase(), config.url);
     return config;
   },
   (error) => {
@@ -31,12 +30,11 @@ api.interceptors.request.use(
 // Interceptor para respostas
 api.interceptors.response.use(
   (response) => {
-    console.log('Resposta recebida:', response.status, response.config.url);
+    // console.log('Resposta recebida:', response.status, response.config.url);
     return response;
   },
   (error) => {
-    console.error('Erro na resposta:', error.response?.status, error.response?.data);
-    
+    // console.error('Erro na resposta:', error.response?.status, error.response?.data);
     // Tratamento de erros específicos
     if (error.response) {
       switch (error.response.status) {
@@ -156,6 +154,7 @@ export const addressService = {
 
   // Deletar endereço
   delete: (id) => {
+    //console.log('Chamando delete:', api.defaults.baseURL);
     return api.delete(`/enderecos/${id}`);
   },
 
