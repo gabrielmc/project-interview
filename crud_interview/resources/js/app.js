@@ -1,7 +1,10 @@
 import './bootstrap';
 import { createApp } from 'vue';
 
-// componentes
+// Importa o plugin de repositórios
+import repositoryPlugin from './services/repositoryPlugin';
+
+// Componentes globais
 import MainApp from './components/MainApp.vue';
 import UserList from './components/UserList.vue';
 import UserFormModal from './components/UserFormModal.vue';
@@ -9,7 +12,11 @@ import UserDetailsModal from './components/UserDetailsModal.vue';
 import ProfileList from './components/ProfileList.vue';
 import AddressList from './components/AddressList.vue';
 
+// Cria a instância da aplicação
 const app = createApp({});
+
+// Plugin de repositórios (injeção global)
+app.use(repositoryPlugin);
 
 // Registrar componentes globalmente
 app.component('main-app', MainApp);
@@ -27,28 +34,19 @@ app.directive('mask', {
     const mask = binding.value;
     
     el.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\D/g, '');
-      let maskedValue = '';
-      let valueIndex = 0;
-      
-      for (let i = 0; i < mask.length && valueIndex < value.length; i++) {
-        if (mask[i] === '#') {
-          maskedValue += value[valueIndex];
-          valueIndex++;
-        } else {
-          maskedValue += mask[i];
-        }
+      const value = e.target.value.replace(/\D/g, '');
+      const masked = applyMask(value, mask);
+
+      // Só dispara o evento se o valor mudou
+      if (masked !== e.target.value) {
+        e.target.value = masked;
+        e.target.dispatchEvent(new Event('input', { bubbles: true }));
       }
-      e.target.value = maskedValue;
-      // Disparar evento input para o v-model
-      e.target.dispatchEvent(new Event('input', { bubbles: true }));
     });
   }
 });
 
-/**
- * Mount the application
- */
+/** Monta a aplicação */
 app.mount('#app');
 
 export default app;
