@@ -149,8 +149,9 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted, watch } from 'vue';
-import { userService, profileService, addressService } from '../services/api';
+// import { ref, reactive, onMounted, watch } from 'vue';
+// import { userService, profileService, addressService } from '../services/api';
+import { ref, reactive, onMounted, inject, watch } from 'vue';
 
 export default {
   name: 'UserFormModal',
@@ -166,10 +167,14 @@ export default {
   },
   emits: ['close', 'saved'],
   setup(props, { emit }) {
+    //Injetando repositórios
+    const { user, profile, address } = inject('repositories');
+
     const profiles = ref([]);
     const saving = ref(false);
     const errors = ref({});
-
+    const addedAddresses = ref([]);
+    
     const form = reactive({
       name: '',
       cpf: '',
@@ -188,12 +193,10 @@ export default {
       ]
     });
 
-    const addedAddresses = ref([]);
-
     // Carregar perfis
     const loadProfiles = async () => {
       try {
-        const response = await profileService.list();
+        const response = await profile.list();
         if (response.data.success) {
           profiles.value = response.data.data;
         }
@@ -207,7 +210,7 @@ export default {
       const cep = form.addresses[index].cep.replace(/\D/g, '');
       if (cep.length !== 8) return;
       try {
-        const response = await addressService.searchCEP(cep);
+        const response = await address.searchCEP(cep);
         
         if (response.data.success) {
           const data = response.data.data;
@@ -271,10 +274,10 @@ export default {
 
         let response;
         if (props.mode === 'edit') {
-          response = await userService.update(props.user.id, data);
+          response = await user.update(props.user.id, data);
         } else {
           console.log(data);
-          response = await userService.create(data);
+          response = await user.create(data);
         }
 
         if (response.data.success) {

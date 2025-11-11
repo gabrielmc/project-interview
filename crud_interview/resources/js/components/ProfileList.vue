@@ -66,8 +66,9 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue';
-import { profileService } from '../services/api';
+// import { ref, reactive, onMounted } from 'vue';
+// import { profileService } from '../services/api';
+import { inject, ref, reactive, onMounted } from 'vue';
 
 export default {
   name: 'ProfileList',
@@ -79,6 +80,7 @@ export default {
     const saving = ref(false);
     const selectedProfile = ref(null);
     const errors = ref({});
+    const { profile } = inject('repositories'); //Injeção de dependência com camada de repository
 
     const form = reactive({
       name: '',
@@ -88,7 +90,7 @@ export default {
     const loadProfiles = async () => {
       loading.value = true;
       try {
-        const response = await profileService.list();
+        const response = await profile.list();
         console.log('Response perfis:', response.data);
         if (response.data.success) {
           profiles.value = response.data.data;
@@ -131,9 +133,9 @@ export default {
         };
 
         if (modalMode.value === 'create') {
-          response = await profileService.create(data);
+          response = await profile.create(data);
         } else {
-          response = await profileService.update(selectedProfile.value.id, data);
+          response = await profile.update(selectedProfile.value.id, data);
         }
 
         if (response.data.success) {
@@ -160,7 +162,7 @@ export default {
       }
 
       try {
-        const response = await profileService.delete(profile.id);
+        const response = await profile.delete(profile.id);
         if (response.data.success) {
           alert('Perfil excluído com sucesso!');
           loadProfiles();
