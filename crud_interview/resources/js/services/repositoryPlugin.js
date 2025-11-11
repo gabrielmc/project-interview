@@ -8,9 +8,9 @@ import AddressRepository from './repositories/AddressRepository';
 export default {
   install(app) {
     const repositories = {
-      user: UserRepository,
-      profile: ProfileRepository,
-      address: AddressRepository
+      userInject: UserRepository,
+      profileInject: ProfileRepository,
+      addressInject: AddressRepository
     };
 
     app.provide('repositories', repositories);

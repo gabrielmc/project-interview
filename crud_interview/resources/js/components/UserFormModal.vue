@@ -149,8 +149,7 @@
 </template>
 
 <script>
-// import { ref, reactive, onMounted, watch } from 'vue';
-// import { userService, profileService, addressService } from '../services/api';
+
 import { ref, reactive, onMounted, inject, watch } from 'vue';
 
 export default {
@@ -168,7 +167,7 @@ export default {
   emits: ['close', 'saved'],
   setup(props, { emit }) {
     //Injetando repositórios
-    const { user, profile, address } = inject('repositories');
+    const { userInject, profileInject, addressInject } = inject('repositories');
 
     const profiles = ref([]);
     const saving = ref(false);
@@ -196,7 +195,7 @@ export default {
     // Carregar perfis
     const loadProfiles = async () => {
       try {
-        const response = await profile.list();
+        const response = await profileInject.list();
         if (response.data.success) {
           profiles.value = response.data.data;
         }
@@ -210,7 +209,7 @@ export default {
       const cep = form.addresses[index].cep.replace(/\D/g, '');
       if (cep.length !== 8) return;
       try {
-        const response = await address.searchCEP(cep);
+        const response = await addressInject.searchCEP(cep);
         
         if (response.data.success) {
           const data = response.data.data;
@@ -274,10 +273,10 @@ export default {
 
         let response;
         if (props.mode === 'edit') {
-          response = await user.update(props.user.id, data);
+          response = await userInject.update(props.user.id, data);
         } else {
           console.log(data);
-          response = await user.create(data);
+          response = await userInject.create(data);
         }
 
         if (response.data.success) {

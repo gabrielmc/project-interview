@@ -128,8 +128,7 @@
 </template>
 
 <script>
-// import { ref, reactive, onMounted } from 'vue';
-// import { addressService } from '../services/api';
+
 import { inject, ref, reactive, onMounted } from 'vue';
 
 export default {
@@ -141,7 +140,7 @@ export default {
     const modalMode = ref('create');
     const saving = ref(false);
     const selectedAddress = ref(null);
-    const { address } = inject('repositories'); //Injeção de dependência com camada de repository
+    const { addressInject } = inject('repositories'); //Injeção de dependência com camada de repository
 
     const form = reactive({
       cep: '',
@@ -163,7 +162,7 @@ export default {
     const loadAddresses = async (page = 1) => {
       loading.value = true;
       try {
-        const response = await address.list('/enderecos', {
+        const response = await addressInject.list('/enderecos', {
           params: { page, per_page: pagination.per_page }
         });
         if (response.data.success) {
@@ -187,7 +186,7 @@ export default {
       if (cep.length !== 8) return;
 
       try {
-        const response = await address.searchCEP(`/cep/${cep}`);
+        const response = await addressInject.searchCEP(`/cep/${cep}`);
         if (response.data.success) {
           const data = response.data.data;
           form.logradouro = data.logradouro;
@@ -240,9 +239,9 @@ export default {
 
         let response;
         if (modalMode.value === 'create') {
-          response = await address.create('/enderecos', data);
+          response = await addressInject.create('/enderecos', data);
         } else {
-          response = await address.update(`/enderecos/${selectedAddress.value.id}`, data);
+          response = await addressInject.update(`/enderecos/${selectedAddress.value.id}`, data);
         }
 
         if (response.data.success) {
@@ -264,7 +263,7 @@ export default {
       }
 
       try {
-        const response = await address.delete(address.id);
+        const response = await addressInject.delete(address.id);
         if (response.data.success) {
           alert('Endereço excluído com sucesso!');
           loadAddresses(pagination.current_page);

@@ -151,10 +151,9 @@
 </template>
 
 <script>
-// import { ref, reactive, onMounted } from 'vue';
+
 import UserFormModal from './UserFormModal.vue';
 import UserDetailsModal from './UserDetailsModal.vue';
-// import { userService } from '../services/api';
 import { inject, ref, reactive, onMounted } from 'vue';
 
 export default {
@@ -170,7 +169,7 @@ export default {
     const showDetailsModal = ref(false);
     const selectedUser = ref(null);
     const modalMode = ref('create'); // 'create' ou 'edit'
-    const { user } = inject('repositories'); //Injeção de dependência com camada de repository
+    const { userInject } = inject('repositories'); //Injeção de dependência com camada de repository
 
     const filters = reactive({
       nome: '',
@@ -190,7 +189,7 @@ export default {
     const loadUsers = async (page = 1) => {
       loading.value = true;
       try {
-        const response = await user.list(page, pagination.per_page);
+        const response = await userInject.list(page, pagination.per_page);
         
         if (response.data.success) {
           users.value = response.data.data.data;
@@ -222,7 +221,7 @@ export default {
         if (filters.data_inicio) params.data_inicio = filters.data_inicio;
         if (filters.data_fim) params.data_fim = filters.data_fim;
 
-        const response = await user.search(params);
+        const response = await userInject.search(params);
         console.log('Response pesquisa:', response.data);
         
         if (response.data.success) {
@@ -277,7 +276,7 @@ export default {
       }
 
       try {
-        const response = await user.delete(user.id);
+        const response = await userInject.delete(user.id);
         
         if (response.data.success) {
           alert('Usuário excluído com sucesso!');
