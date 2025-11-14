@@ -239,9 +239,9 @@ export default {
 
         let response;
         if (modalMode.value === 'create') {
-          response = await addressInject.create('/enderecos', data);
+          response = await addressInject.create(data);
         } else {
-          response = await addressInject.update(`/enderecos/${selectedAddress.value.id}`, data);
+          response = await addressInject.update(selectedAddress.value.id, data);
         }
 
         if (response.data.success) {

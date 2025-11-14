@@ -275,7 +275,6 @@ export default {
         if (props.mode === 'edit') {
           response = await userInject.update(props.user.id, data);
         } else {
-          console.log(data);
           response = await userInject.create(data);
         }
 

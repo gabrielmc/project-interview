@@ -222,7 +222,6 @@ export default {
         if (filters.data_fim) params.data_fim = filters.data_fim;
 
         const response = await userInject.search(params);
-        console.log('Response pesquisa:', response.data);
         
         if (response.data.success) {
           users.value = response.data.data.data;
@@ -508,13 +507,13 @@ export default {
 }
 
 .btn-edit {
-  background-color: #074c91; 
-  color: #fff; 
+  background-color: #ffc107;
+  color: #333;
 }
 
-.btn-editar:hover {
-  background-color: #074c91;
-  color: #fff;
+.btn-edit {
+  background-color: #ffc107;
+  color: #333;
 }
 
 .btn-excluir {
